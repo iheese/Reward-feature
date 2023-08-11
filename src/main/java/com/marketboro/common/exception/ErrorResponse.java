@@ -7,19 +7,17 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @Builder
 public class ErrorResponse {
-    private final Integer code;
-    private final String message;
+    private final ErrorCode message;
 
     public ErrorResponse(ErrorCode errorCode) {
-        this.code = errorCode.getStatusCode();
-        this.message = errorCode.getMessage();
+        this.message = errorCode;
     }
 
     public static ResponseEntity<ErrorResponse> error(CustomException e) {
         return ResponseEntity
                 .status(e.getErrorCode().getStatusCode())
                 .body(ErrorResponse.builder()
-                        .message(e.getErrorCode().getMessage())
+                        .message(e.getErrorCode())
                         .build());
     }
 }
