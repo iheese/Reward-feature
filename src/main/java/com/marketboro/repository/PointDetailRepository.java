@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface PointDetailRepository extends JpaRepository<PointDetail, Long> {
 
-    List<PointDetail> findByUserAndPointDetailStatusEqualsOrderByIdAsc(User user, PointDetailStatus pointDetailStatus);
+    List<PointDetail> findByUserAndPointDetailStatusOrderByExpDateAsc(User user, PointDetailStatus pointDetailStatus);
 }
