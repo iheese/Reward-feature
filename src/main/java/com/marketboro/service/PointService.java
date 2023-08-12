@@ -13,6 +13,7 @@ import com.marketboro.repository.PointRepository;
 import com.marketboro.repository.UserRepository;
 import com.marketboro.validation.ValidParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PointService {
@@ -32,6 +34,7 @@ public class PointService {
     @Transactional(readOnly=true)
     public List<PointResponse.PointHistory> getPointHistory(PointRequest.PointHistory request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        log.info("[getPointHistory] userNO: {}, page: {}, size: {}", request.getUserNo(), request.getPage(), request.getSize());
         return pointRepository.findByUserOrderByPointNoDesc(userService.getUser(request.getUserNo()), pageable)
                 .getContent()
                 .stream().map(point -> new PointResponse.PointHistory(point))
@@ -56,6 +59,7 @@ public class PointService {
                 .point(point)
                 .build());
 
+        log.info("[rewardPoint] userNO: {}, rewardValue: {}", request.getUserNo(), request.getRewardValue());
         return new UserResponse.UserPointAmount(userRepository
                 .save(user)
                 .addPoint(request.getRewardValue()));
@@ -66,6 +70,7 @@ public class PointService {
         Long usageValue = request.getUsageValue();
 
         ValidParam.pointAmount(user.getPointAmount(), usageValue);
+        log.info("[usePoint] pointAmount check");
         userRepository.save(user.minusPoint(usageValue));
 
         Point point = pointRepository.save(Point.builder()
@@ -87,6 +92,7 @@ public class PointService {
                         .build();
                 pointDetailRepository.save(usedPointDetail);
                 pointDetailRepository.save(pointDetail.updatePointDetailStatus());
+                log.info("[usePoint] point 사용 : {}", pointDetail.getPointDetailValue());
                 usageValue -= pointDetail.getPointDetailValue();
             } else {
                 PointDetail usedPointDetail = PointDetail.builder()
@@ -97,6 +103,7 @@ public class PointService {
                         .point(point)
                         .build();
                 pointDetailRepository.save(usedPointDetail);
+                log.info("[usePoint] 잔여 point 사용: {}", usageValue);
 
                 if(pointDetail.getPointDetailValue() - usageValue > 0) {
                     PointDetail remainPointDetail = PointDetail.builder()
@@ -108,6 +115,7 @@ public class PointService {
                             .point(point)
                             .build();
                     pointDetailRepository.save(remainPointDetail);
+                    log.info("[usePoint] 남은 포인트 {}", pointDetail.getPointDetailValue() - usageValue);
                 }
                 pointDetailRepository.save(pointDetail.updatePointDetailStatus());
                 break;
