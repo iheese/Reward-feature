@@ -4,20 +4,22 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class ErrorResponse {
-    private final ErrorCode message;
+    private final String name;
+    private final String message;
+    private final LocalDateTime timestamp;
 
-    public ErrorResponse(ErrorCode errorCode) {
-        this.message = errorCode;
-    }
-
-    public static ResponseEntity<ErrorResponse> error(CustomException e) {
+    public static ResponseEntity<ErrorResponse> error(ErrorCode errorCode) {
         return ResponseEntity
-                .status(e.getErrorCode().getStatusCode())
+                .status(errorCode.getStatusCode())
                 .body(ErrorResponse.builder()
-                        .message(e.getErrorCode())
+                        .name(errorCode.name())
+                        .message(errorCode.getMessage())
+                        .timestamp(LocalDateTime.now())
                         .build());
     }
 }
