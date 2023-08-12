@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+  redis:
+    host: 3.37.18.145
+    port: 6379
+
+  sql:
+    init:
+      mode: always #수정필요 > always
+
+  #DB Setting
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 1234
+
+  #JPA Setting
+  jpa:
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: create #수정필요 < create
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+
+      default_batch_fetch_size: 1000
+    defer-datasource-initialization: true
+  #Pageable Setting
+  data:
+    web:
+      pageable:
+        default-page-size: 10
