@@ -1,11 +1,12 @@
 package com.marketboro.dto;
 
 import com.marketboro.domain.User;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 public class UserResponse {
-
+    @Getter
     public static class UserPointAmount {
         private Long userNo;
         private String userName;
