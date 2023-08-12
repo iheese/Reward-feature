@@ -21,12 +21,18 @@ public class User extends BaseTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_no")
     private Long userNo;
-    @Column(name = "userName")
+
+    @Column(name = "user_Name")
     private String userName;
+
     @Column(name = "point_amount")
     private Long pointAmount;
+
     @OneToMany(mappedBy = "user")
     private List<Point> pointHistory = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Point> pointDetailHistory = new ArrayList<>();
 
     public User addPoint(Long point) {
         this.pointAmount += point;
