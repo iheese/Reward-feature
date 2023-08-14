@@ -1,9 +1,11 @@
 package com.marketboro.dto;
 
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class PointRequest {
+    @AllArgsConstructor
     @Getter
     public static class PointHistory {
         @Positive
@@ -12,6 +14,7 @@ public class PointRequest {
         private int size;
     }
 
+    @AllArgsConstructor
     @Getter
     public static class PointReward {
         @Positive
@@ -20,6 +23,7 @@ public class PointRequest {
         private Long rewardValue;
     }
 
+    @AllArgsConstructor
     @Getter
     public static class PointUsage {
         @Positive
