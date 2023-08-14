@@ -13,6 +13,12 @@ public class ErrorResponse {
     private final String message;
     private final LocalDateTime timestamp;
 
+    /**
+     * 커스텀 에러 코드를 받아 ResponseEntity 리턴
+     *
+     * @param errorCode 커스텀 에러 코드
+     * @return 에러 데이터 ResponseEntity
+     */
     public static ResponseEntity<ErrorResponse> error(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getStatusCode())

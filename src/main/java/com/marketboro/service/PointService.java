@@ -31,6 +31,12 @@ public class PointService {
     private final PointRepository pointRepository;
     private final PointDetailRepository pointDetailRepository;
 
+    /**
+     * 포인트 적립/사용 내역 조회
+     *
+     * @param request 유저 Id, page 값 , 페이지의 size 크기
+     * @return 포인트 적립/사용 내역 리스트
+     */
     @Transactional(readOnly=true)
     public List<PointResponse.PointHistory> getPointHistory(PointRequest.PointHistory request) {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
@@ -41,6 +47,12 @@ public class PointService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 포인트 적립
+     *
+     * @param request 유저 Id, 사용할 포인트 금액
+     * @return 적립 후 유저 데이터
+     */
     @Transactional
     public UserResponse.UserPointAmount rewardPoint(PointRequest.PointReward request) {
         User user = userService.getUser(request.getUserNo());
@@ -65,24 +77,35 @@ public class PointService {
                 .addPoint(request.getRewardValue()));
     }
 
+    /**
+     * 포인트 사용
+     *
+     * @param request (유저 Id, 사용할 포인트 금액)
+     * @return 사용 후 유저 데이터
+     */
+    @Transactional
     public UserResponse.UserPointAmount usePoint(PointRequest.PointUsage request) {
         User user = userService.getUser(request.getUserNo());
         Long usageValue = request.getUsageValue();
 
         ValidParam.pointAmount(user.getPointAmount(), usageValue);
         log.info("[usePoint] pointAmount check");
+        // 유저 포인트 총액 사용
         userRepository.save(user.minusPoint(usageValue));
 
+        // 해당 포인트 사용 처리
         Point point = pointRepository.save(Point.builder()
                     .pointValue(usageValue)
                     .user(user)
                     .pointStatus(PointStatus.USE)
                     .build());
 
+        // 남은 포인트 상세 조회
         List<PointDetail> pointDetails = pointDetailRepository.findByUserAndPointDetailStatusOrderByExpDateAsc(user, PointDetailStatus.REMAIN);
 
         for (PointDetail pointDetail : pointDetails) {
             if (pointDetail.getPointDetailValue() < usageValue) {
+                // 사용 포인트가 클 경우 포인트 상세 사용처리
                 PointDetail usedPointDetail = PointDetail.builder()
                         .pointDetailValue(pointDetail.getPointDetailValue())
                         .pointStatus(PointStatus.USE)
@@ -95,6 +118,7 @@ public class PointService {
                 log.info("[usePoint] point 사용 : {}", pointDetail.getPointDetailValue());
                 usageValue -= pointDetail.getPointDetailValue();
             } else {
+                // 잔여 포인트 상세 사용처리
                 PointDetail usedPointDetail = PointDetail.builder()
                         .pointDetailValue(usageValue)
                         .pointStatus(PointStatus.USE)
@@ -105,6 +129,7 @@ public class PointService {
                 pointDetailRepository.save(usedPointDetail);
                 log.info("[usePoint] 잔여 point 사용: {}", usageValue);
 
+                // 포인트 사용 후 잔여 포인트 존재하면 사용가능 상태로 저장
                 if(pointDetail.getPointDetailValue() - usageValue > 0) {
                     PointDetail remainPointDetail = PointDetail.builder()
                             .pointDetailValue(pointDetail.getPointDetailValue() - usageValue)

@@ -9,6 +9,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+    /**
+     * CustomException 예외에 대한 처리
+     *
+     * @param e 커스텀한 예외
+     * @return json 형식의 에러 데이터
+     */
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         log.error("[handleCustomException] {} : {}",e.getErrorCode().getStatusCode(), e.getErrorCode().getMessage());

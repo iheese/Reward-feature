@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
+    /**
+     * 유저 포인트 총액 및 데이터 조회
+     *
+     * @param userRequest (유저 Id)
+     * @return 유저 데이터
+     */
     @PostMapping("/user/getUserPoint")
     public ResponseEntity<UserResponse.UserPointAmount> getUserPoint(@Valid @RequestBody UserRequest userRequest) {
         return new ResponseEntity(userService.getUserPoint(userRequest.getUserNo()), HttpStatus.OK);
