@@ -3,16 +3,13 @@ server:
 
 spring:
   mvc:
-    path match:
+    path_match:
       matching-strategy: ant_path_matcher
-  redis:
-    host: 3.37.18.145
-    port: 6379
 
   sql:
     init:
-      mode: always #수정필요 > always
-
+      mode: always
+      
   #DB Setting
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -27,7 +24,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: create #수정필요 < create
+      ddl-auto: create
     properties:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
