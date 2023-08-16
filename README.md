@@ -90,3 +90,46 @@
 <br>
 
 - 추가적으로 적립금 유효기간을 구현하였습니다.
+
+<br>
+
+# 프로그램 실행
+
+```shell
+# JAVA 17 버전 확인 및 DB 스키마 생성 후
+mysql.server start
+
+# 빌드
+./gradlew build
+
+# 빌드 파일 제거
+./gradlew clean # 에러 뜰 경우 clean 실행
+# permission denied 뜰 경우 아래 치고 빌드
+chmod +x gradlew 
+
+# 디렉토리 이동
+cd build/libs
+
+# jar 파일 실행
+java -jar marketboro-assignment-0.0.1-SNAPSHOT.jar
+```
+
+- 새로운 터미널창 열기
+
+```shell
+# API 요청 양식
+curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '[REQUEST BODY]' http://localhost:8080/[URI]
+
+# API 요청 예시
+# 유저 데이터 (포인트  총액 포함) 조회
+curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{"userNo" : 1}' http://localhost:8080/user/getUserPoint
+
+# 포인트 적립/사용 내역 조회
+curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{"userNo" : 1, "page" : 0, "size" : 10}' http://localhost:8080/point/getPointHistory
+
+# 포인트 적립
+curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{"userNo" : 1, "rewardValue" : 1000}' http://localhost:8080/point/rewardPoint
+
+# 포인트 사용
+curl -X POST -H "Content-Type: application/json; charset=utf-8" -d '{"userNo" : 1, "usageValue" : 1000}' http://localhost:8080/point/usePoint
+```
