@@ -96,8 +96,19 @@
 # 프로그램 실행
 
 ```shell
-# JAVA 17 버전 확인 및 DB 스키마 생성 후
+# JAVA 17 버전 확인 필수
+# DB 실행
 mysql.server start
+
+# DB 접속
+mysql -u root -p
+
+# 스키마 확인
+show databases;
+
+# test 스키마 없다면 생성
+# test 스키마 아래서 DB 생성되게 설정되어져 있다. 
+create database test;
 
 # 빌드
 ./gradlew build
