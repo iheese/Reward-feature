@@ -1,4 +1,3 @@
-# marketboro-assignment
 
 # 개발 스펙
 - JAVA 17
@@ -13,7 +12,7 @@
 
 # ERD
 
-![ERD](https://github.com/iheese/marketboro-assignment/assets/88040158/90eadba0-b203-4ce5-87d7-7b3448438e4b)
+
 
 - 포인트 엔티티가 적립되어질 때 포인트 상세 엔티티는 적립됩니다.
 - 포인트 엔티티가 사용되어질 때 먼저 적립된 포인트부터 사용되며(FIFO)
@@ -122,7 +121,7 @@ chmod +x gradlew
 cd build/libs
 
 # jar 파일 실행
-java -jar marketboro-assignment-0.0.1-SNAPSHOT.jar
+java -jar [jar 파일 이름]
 ```
 
 - 새로운 터미널창 열기
