@@ -7,15 +7,6 @@ import lombok.Getter;
 public class PointRequest {
     @AllArgsConstructor
     @Getter
-    public static class PointHistory {
-        @Positive
-        private Long userNo;
-        private int page;
-        private int size;
-    }
-
-    @AllArgsConstructor
-    @Getter
     public static class PointReward {
         @Positive
         private Long userNo;

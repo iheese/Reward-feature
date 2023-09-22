@@ -2,7 +2,6 @@ package com.reward.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reward.domain.User;
-import com.reward.dto.UserRequest;
 import com.reward.dto.UserResponse;
 import com.reward.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,10 +34,6 @@ class UserControllerTest {
     void getUserPoint() throws Exception {
         //given
         Long userNo = 100L;
-        String requestBody = objectMapper
-                .writeValueAsString(UserRequest.builder()
-                .userNo(userNo)
-                .build());
         User user = User.builder()
                 .userNo(userNo)
                 .userName("홍길동")
@@ -48,9 +44,7 @@ class UserControllerTest {
 
         //when
         //then
-        mockMvc.perform(post("/user/getUserPoint")
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/user/point/" + userNo))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userNo").value(user.getUserNo()))
                 .andExpect(jsonPath("$.userName").value(user.getUserName()))

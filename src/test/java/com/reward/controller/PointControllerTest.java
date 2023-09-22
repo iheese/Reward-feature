@@ -22,7 +22,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -50,7 +53,6 @@ class PointControllerTest {
         //given
         int page = 0;
         int size = 5;
-        String requestBody = objectMapper.writeValueAsString(new PointRequest.PointHistory(userNo, page, size));
         List<PointResponse.PointHistory> pointHistoryList = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
             Point point = Point.builder()
@@ -63,14 +65,12 @@ class PointControllerTest {
             pointHistoryList.add(pointHistory);
         }
 
-        when(pointService.getPointHistory(any(PointRequest.PointHistory.class)))
+        when(pointService.getPointHistory(anyLong(), anyInt(), anyInt()))
                 .thenReturn(pointHistoryList);
 
         //when
         //then
-        mockMvc.perform(post("/point/getPointHistory")
-                    .content(requestBody)
-                    .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/point/history/userNo=" + userNo + "/page=" + page + "/size=" + size))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(size)))
                 .andDo(print());
@@ -89,7 +89,7 @@ class PointControllerTest {
 
         //when
         //then
-        mockMvc.perform(post("/point/rewardPoint")
+        mockMvc.perform(post("/point/reward")
                     .content(requestBody)
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -112,7 +112,7 @@ class PointControllerTest {
 
         //when
         //then
-        mockMvc.perform(post("/point/usePoint")
+        mockMvc.perform(post("/point/usage")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

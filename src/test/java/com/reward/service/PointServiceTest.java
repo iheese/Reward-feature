@@ -54,7 +54,6 @@ class PointServiceTest {
         //given
         int page = 0;
         int size = 5;
-        PointRequest.PointHistory request = new PointRequest.PointHistory(userNo, page, size);
         Pageable pageable = PageRequest.of(page,size);
         List<Point> pointList = new ArrayList<>();
         List<PointResponse.PointHistory> response = pointList.stream()
@@ -65,7 +64,7 @@ class PointServiceTest {
         when(pointRepository.findByUserOrderByPointNoDesc(user, pageable)).thenReturn(new PageImpl<>(pointList));
 
         //when
-        List<PointResponse.PointHistory> result = pointService.getPointHistory(request);
+        List<PointResponse.PointHistory> result = pointService.getPointHistory(userNo, page, size);
 
         //then
         assertEquals(response, result);

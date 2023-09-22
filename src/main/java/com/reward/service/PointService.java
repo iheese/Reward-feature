@@ -34,14 +34,14 @@ public class PointService {
     /**
      * 포인트 적립/사용 내역 조회
      *
-     * @param request 유저 Id, page 값 , 페이지의 size 크기
+     * @param userNo, page, size
      * @return 포인트 적립/사용 내역 리스트
      */
     @Transactional(readOnly=true)
-    public List<PointResponse.PointHistory> getPointHistory(PointRequest.PointHistory request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        log.info("[getPointHistory] userNO: {}, page: {}, size: {}", request.getUserNo(), request.getPage(), request.getSize());
-        return pointRepository.findByUserOrderByPointNoDesc(userService.getUser(request.getUserNo()), pageable)
+    public List<PointResponse.PointHistory> getPointHistory(Long userNo, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        log.info("[getPointHistory] userNO: {}, page: {}, size: {}", userNo, page, size);
+        return pointRepository.findByUserOrderByPointNoDesc(userService.getUser(userNo), pageable)
                 .getContent()
                 .stream().map(point -> new PointResponse.PointHistory(point))
                 .collect(Collectors.toList());
